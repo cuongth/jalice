@@ -1,0 +1,63 @@
+<aiml>
+
+<category>
+<pattern>IRC JOIN *</pattern>
+<template>
+<secure error="I don't want to join star(1)">
+<irc:command>JOIN <star/></irc:command>
+I have joined channel <star/>.
+</secure>
+</template>
+</category>
+
+<category>
+<pattern>IRC PART *</pattern>
+<template>
+<secure error="No, I like it here">
+<irc:command>PART <star/></irc:command>
+I have left channel <star/>.
+</secure>
+</template>
+</category>
+
+<!-- Don't do this if you want to reconnect. A subtle bug yet to be resolved -->
+<category>
+<pattern>QUIT IRC</pattern>
+<template>
+<secure error="I refuse to leave. Why don't you leave instead?">
+<irc:command>QUIT :I don't want to go...</irc:command>
+</secure>
+</template>
+</category>
+
+<category>
+<pattern>JOIN DALNET</pattern>
+<template>
+<secure error="You must be an authorised user to do this">
+<irc>
+<server>twisted.ma.us.dal.net</server>
+<nick>j-alice</nick>
+<port>6667</port>
+<channel>#AliceBot</channel>
+</irc>
+Attempting to connect to Dal.Net
+</secure>
+</template>
+</category>
+
+<category>
+<pattern>JOIN OPN</pattern>
+<template>
+<secure error="You must be an authorised user to do this">
+<irc>
+<server>irc.openprojects.net</server>
+<nick>j-alice</nick>
+<port>6667</port>
+<channel>#bots</channel>
+</irc>
+Attempting to connect to OpenProjects.net
+</secure>
+</template>
+</category>
+
+</aiml>

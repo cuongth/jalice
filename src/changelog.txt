@@ -1,0 +1,47 @@
+Silly changelog:
+
+Version 0.3.1
+=============
+
+- Fixed bug in SocketHandler, that would not let it handle requests upon restarting the handling loop
+- Loaded AIML that gets modified is automatically reloaded (unfortunately this is not guaranteed to happen)
+- Removed merging support (in favour of automagic file reloading)
+- Changed console interaction to use user's name (if known), and bot's name in the prompts (nothing special)
+- Lessened normalisation, preserving formatting in wildcards, set, and get, etc.
+- Changed normalisation, so that replaced words are in lowercase
+- Automagically set user's name to their IRC nick if name is unknown
+- Added commandline option to convert temporary.data to temporary.aiml (overwriting any previous temporary.aiml file), and then quit (easier than writing a separate program, hehe). This is invoked by passing --convert as the only option to j-alice
+- Added timing facility, used only in loading at the moment
+- Tidied up the learning display in console .. nice and tabular now :-)
+- Fixed Database to remove newlines from data elements (screwed it up good otherwise), and made it put data in .csv files instead of extensionless filenames (then can double-click it, and even view in Excel)
+- Got the basics of an XML over Sockets server built. Have a Flash client that can interact using XML over Sockets as well, which is quite cool. Still have a fair way to go yet though
+- Altered Socket API to allow it to send terminating null bytes (example service requiring terminating null bytes is Flash 5+)
+- Fixed small bug in console output, where it wouldn't display sentences 1 character long
+- Fixed sentence splitting to cause a crash when sentence contained only whitespace
+- Added error notification about detected infinite loops, and set max recursion depth to 32 (ie: only 32 nested recursive calls allowed)
+- Fixed obscure bug in sentence splitting
+- Corrected substituter, so that it normalises lowercase input as well
+- Added JavaScript support to BeOS package (Date class works, unlike Win32 still)
+- Got CDATA sections working now (makes tracking errors in scripts easier, and fixed yet another obscure problem due to newlines previously being stripped out combined with // style comments)
+
+Version 0.3
+===========
+
+- Dramatic decrease in memory usage (~12MB for Anna AIML on Win32)
+- Simple authorisation capabilities to prevent people screwing with your bot (simple-auth.aiml)
+- Experimental web server (webserver.aiml)
+- Javascript support for Win32 platform (still large number of bugs, and lack of features)
+- Miscellaneous fixes to IRC (example commands in irc-conn.aiml)
+- Logging for IRC and web server
+- Attribute functions (examples in programming.aiml)
+- Bootstrapping option (std-startup.aiml), disabled using --manual
+- Learnt AIML saved to & loaded from temporary.data (not in XML format, nor easily editable). Conversion utility to come later
+- Substitutions moved to substitutions.xml
+
+Previous Versions
+=================
+
+Can't remember no more .. and who really cares anyway?
+
+Website: http://j-alice.sourceforge.net
+Mailing List: https://lists.sourceforge.net/lists/listinfo/j-alice-general

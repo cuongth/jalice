@@ -1,0 +1,20 @@
+<aiml>
+
+<!-- Starts up the web server on the specified port -->
+
+<!-- On local machine, URL is http://127.0.0.1:<port> -->
+<!-- In example below, this would be http://127.0.0.1:9000 -->
+
+<category>
+<pattern>RUN WEB SERVER</pattern>
+<template>
+<secure error="You must be an authorised user">
+<http>
+<name>simple webserver</name><!-- Does nothing yet, but must be present -->
+<port>9000</port>
+</http>
+</secure>
+</template>
+</category>
+
+</aiml>

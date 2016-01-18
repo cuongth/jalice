@@ -1,0 +1,57 @@
+<aiml>
+
+<category>
+<pattern>AUTHORISE ME</pattern>
+<template>
+<think><set name="auth-id"><lowercase><id/></lowercase></set></think>
+
+<condition name="auth-id">
+<!-- List of people allowed to be authorised without requiring a password -->
+<!-- The below IDs are those of the J-Alice creator -->
+<li value="s-a-t-a-n"><authenticate/></li>
+<li value="psycho-devil"><authenticate/></li>
+<!-- If the user's ID does not match any of the above, the user is not authorised -->
+<li>I'm not allowed to authorise you.</li>
+</condition>
+</template>
+</category>
+
+<category>
+<pattern>AUTHORISE IF PASSWORD IS *</pattern>
+<template>
+<think><set name="auth-pass"><lowercase><star/></lowercase></set></think>
+
+<condition name="auth-pass">
+<!-- If user entered 'password', then user is authorised -->
+<!-- It is HIGHLY recommended to change this, and never use in a public area, like an IRC channel -->
+<li value="password"><authenticate/></li>
+<!-- Otherwise the password is incorrect, and the user will not be authorised -->
+<li>I'm not allowed to authorise you</li>
+</condition>
+</template>
+</category>
+
+<category>
+<pattern>AUTHORISE ME IF PASSWORD IS *</pattern>
+<template>
+<think><set name="auth-id"><lowercase><id/></lowercase></set></think>
+<think><set name="auth-pass"><lowercase><star/></lowercase></set></think>
+
+<condition name="auth-id">
+<!-- List of people allowed to be authorised if password is valid -->
+<li value="joe bloggs">
+<condition name="auth-pass" value="my password">
+<authenticate/>
+</condition>
+</li>
+<!-- Authorise user 'boo ridley' if his password is 'mockingbird' -->
+<li value="boo ridley">
+<condition name="auth-pass" value="mockingbird">
+<authenticate/>
+</condition>
+</li>
+</condition>
+</template>
+</category>
+
+</aiml>

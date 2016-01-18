@@ -1,0 +1,252 @@
+<aiml>
+
+<!-- Programming -->
+
+<!-- Some crazy implementations of common data structures, and some control functions -->
+
+<!-- Note to self: replace the addition/subtraction with JavaScript equivalent
+	categories for better performance                                               -->
+
+<!-- TEST -->
+<category>
+<pattern>SET * TO *</pattern>
+<template>
+<think><set name="star(1)"><star index="2"/></set></think>
+Set to: <get name="star(1)"/>.
+</template>
+</category>
+
+<category>
+<pattern>GET *</pattern>
+<template>
+<star/> = <get name="star(1)"/>.
+</template>
+</category>
+
+<!-- STACK -->
+
+<category>
+<pattern>NEW STACK *</pattern>
+<template>
+<think><set name="stack star(1) index">0</set></think>
+<think><set name="stack star(1) size">0</set></think>
+New stack named <star/> created!
+</template>
+</category>
+
+<!-- Nested predicates in attributes not yet supported .. can fix that though -->
+<!-- But for meantime, use a temporary variable                               -->
+<category>
+<pattern>STACK * PUSH *</pattern>
+<template>
+<think><set name="stack star(1) size"><javascript><get name="stack star(1) size"/> + 1;</javascript></set></think>
+<think><set name="temp">stack <star/> <get name="stack star(1) size"/></set></think>
+<think><set name="get(temp)"><star index="2"/></set></think>
+</template>
+</category>
+
+<!-- Again, nested predicates in attributes not yet supported -->
+<category>
+<pattern>STACK * TOP</pattern>
+<template>
+<condition name="stack star(1) size">
+<li value="0">Sorry, stack is empty</li>
+<li>
+<think><set name="temp">stack <star/> <get name="stack star(1) size"/></set></think>
+<get name="get(temp)"/>
+</li>
+</condition>
+</template>
+</category>
+
+<!-- Simply decrease the index -->
+<category>
+<pattern>STACK * POP</pattern>
+<template>
+<condition name="stack star(1) size">
+<li value="0">Sorry, stack is empty</li>
+<li>
+<think><set name="stack star(1) size"><javascript><get name="stack star(1) size"/> - 1;</javascript></set></think>
+</li>
+</condition>
+</template>
+</category>
+
+<!-- Need nested predicates in attributes support! -->
+<category>
+<pattern>STACK * TOP AND POP</pattern>
+<template>
+<condition name="stack star(1) size">
+<li value="0">Sorry, stack is empty</li>
+<li>
+<srai>STACK <star/> TOP</srai>
+<srai>STACK <star/> POP</srai>
+</li>
+</condition>
+</template>
+</category>
+
+<category>
+<pattern>STACK * IS EMPTY</pattern>
+<template>
+<condition name="stack star(1) size">
+<li value="0">true</li>
+<li>false</li>
+</condition>
+</template>
+</category>
+
+<category>
+<pattern>STACK * MAKE EMPTY</pattern>
+<template>
+<think><set name="stack star(1) index">0</set></think>
+<think><set name="stack star(1) size">0</set></think>
+<star/> is now empty.
+</template>
+</category>
+
+<category>
+<pattern>STACK * SIZE</pattern>
+<template>
+<get name="stack star(1) size"/>
+</template>
+</category>
+
+<!-- QUEUE -->
+
+<category>
+<pattern>NEW QUEUE *</pattern>
+<template>
+<think><set name="queue star(1) head">1</set></think>
+<think><set name="queue star(1) tail">0</set></think>
+<think><set name="queue star(1) size">0</set></think>
+New queue named <star/> created!
+</template>
+</category>
+
+<category>
+<pattern>QUEUE * ENQUEUE *</pattern>
+<template>
+<think><set name="queue star(1) size"><javascript><get name="queue star(1) size"/> + 1;</javascript></set></think>
+<think><set name="queue star(1) tail"><javascript><get name="queue star(1) tail"/> + 1;</javascript></set></think>
+<think><set name="temp">queue <star/> <get name="queue star(1) tail"/></set></think>
+<think><set name="get(temp)"><star index="2"/></set></think>
+</template>
+</category>
+
+<category>
+<pattern>QUEUE * FRONT</pattern>
+<template>
+<condition name="queue star(1) size">
+<li value="0">Sorry, queue is empty</li>
+<li>
+<think><set name="temp">queue <star/> <get name="queue star(1) head"/></set></think>
+<get name="get(temp)"/>
+</li>
+</condition>
+</template>
+</category>
+
+<category>
+<pattern>QUEUE * DEQUEUE</pattern>
+<template>
+<condition name="queue star(1) size">
+<li value="0">Sorry, queue is empty</li>
+<li>
+<think><set name="queue star(1) size"><javascript><get name="queue star(1) size"/> - 1;</javscript></set></think>
+<think><set name="queue star(1) head"><javascript><get name="queue star(1) head"/> + 1;</javascript></set></think>
+</li>
+</condition>
+</template>
+</category>
+
+<category>
+<pattern>QUEUE * IS EMPTY</pattern>
+<template>
+<condition name="queue star(1) size">
+<li value="0">true</li>
+<li>false</li>
+</condition>
+</template>
+</category>
+
+<category>
+<pattern>QUEUE * MAKE EMPTY</pattern>
+<template>
+<think><set name="queue star(1) head">1</set></think>
+<think><set name="queue star(1) tail">0</set></think>
+<think><set name="queue star(1) size">0</set></think>
+<star/> is now empty.
+</template>
+</category>
+
+<category>
+<pattern>QUEUE * SIZE</pattern>
+<template>
+<get name="queue star(1) size"/>
+</template>
+</category>
+
+<!-- LIST -->
+
+<!-- How to do a "linked list" with random point of insertion? -->
+
+<!-- BINARY TREE -->
+
+<!-- How to do a binary tree? -->
+
+<!-- MAP -->
+
+<!-- Can we do a map, for value-pair sort of thing? -->
+
+<!-- LOOPS -->
+
+<!-- Problem with loops: how to minimise/prevent recursion? -->
+
+<!-- DO x WHILE y -->
+
+<category>
+<pattern>DO * WHILE *</pattern>
+<template>
+<think><set name="while"><srai><star index="2"/></srai></set></think>
+<condition name="while">
+<li value="true">
+<sr/>
+<srai>DO <star/> WHILE <star index="2"/></srai>
+</li>
+</condition>
+</template>
+</category>
+
+<!-- DO x UNTIL y -->
+
+<category>
+<pattern>DO * UNTIL *</pattern>
+<template>
+<sr/>
+<think><set name="until"><srai><star index="2"/></srai></set></think>
+<condition name="until">
+<li value="true"/>
+<li>
+<srai>DO <star/> UNTIL <star index="2"/></srai>
+</li>
+</condition>
+</template>
+</category>
+
+<!-- BRANCHING -->
+
+<!-- IF x THEN y ELSE z -->
+
+<category>
+<pattern>IF * THEN * ELSE *</pattern>
+<template>
+<think><set name="if"><sr/></set></think>
+<condition name="if">
+<li value="true"><srai><star index="2"/></srai></li>
+<li><srai><star index="3"/></srai></li>
+</condition>
+</template>
+</category>
+
+</aiml>
