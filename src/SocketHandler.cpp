@@ -16,7 +16,7 @@
 using namespace std;
 
 bool SocketHandler::alreadyRunning = false;
-vector<Socket *> SocketHandler::sockets;
+set<Socket *> SocketHandler::sockets;
 
 void SocketHandler::runLoop() {
     if (alreadyRunning) {
@@ -26,14 +26,14 @@ void SocketHandler::runLoop() {
     
     Socket *sock;
     int socket, result;
+    set<Socket *>::iterator it;
     
     while (!sockets.empty()) {
         fd_set input_sockets;
-        unsigned int sz = sockets.size();
 
         FD_ZERO(&input_sockets);
-        for (unsigned int ix = 0; ix < sz; ++ix) {
-            sock = sockets[ix];
+        for (it = sockets.begin(); it != sockets.end(); ++it) {
+            sock = *it;
             if (sock != NULL) {
                 socket = sock->getSD();
             } else {
@@ -63,8 +63,8 @@ void SocketHandler::runLoop() {
                 return;    //    I guess this is right afterall
                 //    Otherwise get stuck in an infinite loop...
         }
-        for (unsigned int ix = 0; ix < sz; ++ix) {
-            sock = sockets[ix];
+        for (it = sockets.begin(); it != sockets.end(); ++it) {
+            sock = *it;
             if (sock != NULL) {
                 socket = sock->getSD();
             } else {
@@ -78,6 +78,10 @@ void SocketHandler::runLoop() {
     alreadyRunning = false;
 }
 
-void SocketHandler::addSocket(Socket *socket) {
-    sockets.push_back(socket);
+void SocketHandler::insertSocket(Socket *socket) {
+    sockets.insert(socket);
+}
+
+void SocketHandler::eraseSocket(Socket *socket) {
+    sockets.erase(socket);
 }

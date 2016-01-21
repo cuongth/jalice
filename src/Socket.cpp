@@ -46,7 +46,7 @@ Socket::Socket(int socket, const char* name, int p):listener(NULL), sd(socket),
     #ifdef WIN32
         win32_init_sockets();
     #endif
-    SocketHandler::addSocket(this);
+    SocketHandler::insertSocket(this);
 }
 
 Socket::Socket(const string &host, const int &port) {
@@ -76,24 +76,21 @@ Socket::Socket(const string &host, const int &port) {
         perror("bind");
     }
     
-    SocketHandler::addSocket(this);
+    SocketHandler::insertSocket(this);
 }
 
 Socket::~Socket() {
     disconnect();
-    //TODO: remove self from the socket loop
-//    As far as I can tell, this don't work
-//    for (int ix = 0; ix < SocketHandler::sockets.size(); ++ix) {
-//        if (SocketHandler::sockets[ix] == this) {
-//            SocketHandler::sockets[ix]->process();
-//            SocketHandler::sockets[ix] = NULL;
-//        }
-//    }
+
+    process();
+    delete listener;
+    listener = NULL;
+
     delete [] host;
     host = NULL;
 }
 
-const int buffer_size = 5000;
+const int buffer_size = 2048;
 
 void Socket::connect() {
     if (sd < 0) {
@@ -143,6 +140,7 @@ void Socket::disconnect(const char *reason) {
             listener->disconnected(out);
         }
     }
+    SocketHandler::eraseSocket(this);
 }
 
 void Socket::setListener(SocketListener *listener) {
@@ -172,11 +170,14 @@ int Socket::read(string &str) {
     }
     char *buffer = new char[buffer_size];
     n = read_raw(buffer, buf_size);
-    buffer[n] = '\0';
-    str = string(buffer);
-    if (listener != NULL) {
-        listener->recv(str);
+    if (n > 0) {
+        buffer[n] = '\0';
+        str = string(buffer);
+        if (listener != NULL) {
+            listener->recv(str);
+        }
     }
+    delete [] buffer;
     return n;
 }
 
