@@ -225,3 +225,7 @@ Record::Record(const string &f1, const string &f2, const string &f3, const strin
     data[PROPERTY] = prop;
     data[VALUE] = val;
 }
+
+Record::~Record() {
+    delete [] data;
+}

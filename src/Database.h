@@ -52,6 +52,7 @@ public:
     
     Record(const string &, const string &, const string &, const string &, const string &, const string &, const string &);
     Record();
+    ~Record();
 };
 
 #endif  
