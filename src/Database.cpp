@@ -61,9 +61,12 @@ void Database::load() {
                         getline(i_table, seven[ix]);
                     }
                 }
-                Insert(record, table, new Record(seven[0], seven[1], seven[2], seven[3], seven[4], seven[5], seven[6]));
+                Insert(record, table, new Record(seven[0], seven[1], seven[2], seven[3],
+                                                 seven[4], seven[5], seven[6]));
             }
+            i_table.close();
         }
+        fin.close();
     }
 }
 
@@ -86,10 +89,19 @@ void Database::save() {
                     continue;
                 }
                 Record &r = *(it_r->second);
-                of << record_name << "," << id << "," << removeNewlines(r.data[0]) << "," << removeNewlines(r.data[1]) << "," << removeNewlines(r.data[2]) << "," << removeNewlines(r.data[3]) << "," << removeNewlines(r.data[4]) << "," << removeNewlines(r.data[5]) << "," << removeNewlines(r.data[6]) << endl;
+                of << record_name << "," << id << ","
+                   << removeNewlines(r.data[0]) << ","
+                   << removeNewlines(r.data[1]) << ","
+                   << removeNewlines(r.data[2]) << ","
+                   << removeNewlines(r.data[3]) << ","
+                   << removeNewlines(r.data[4]) << ","
+                   << removeNewlines(r.data[5]) << ","
+                   << removeNewlines(r.data[6]) << endl;
             }
         }
+        of.close();
     }
+    fout.close();
 }
 
 Record **Database::Select(const string &id, bool *get, const string &from, bool *where, Record *values) {
@@ -100,7 +112,7 @@ Record **Database::Select(const string &id, bool *get, const string &from, bool 
         return rset;
     }
     
-    table &workTable = (*d.find(from)).second;
+    table &workTable = d.find(from)->second;
     
     if (workTable.find(id) == workTable.end()) {
         Record **rs = new Record*[1];
@@ -108,7 +120,7 @@ Record **Database::Select(const string &id, bool *get, const string &from, bool 
         return rs;
     }
     
-    record &workRecord = (*workTable.find(id)).second;
+    record &workRecord = workTable.find(id)->second;
     
     Record **resultSet = new Record*[workRecord.size() + 1];
     int count = -1;
@@ -118,7 +130,7 @@ Record **Database::Select(const string &id, bool *get, const string &from, bool 
             goto outerSelect;
         }
         for (unsigned int ix = 0; ix < 7; ++ix) {
-            if (where[ix] && values->data[ix] != (*workRecord.find(iz)).second->data[ix]) {
+            if (where[ix] && values->data[ix] != (workRecord.find(iz)->second)->data[ix]) {
                 goto outerSelect;
             }
         }
@@ -126,7 +138,7 @@ Record **Database::Select(const string &id, bool *get, const string &from, bool 
         resultSet[count] = new Record();
         for (unsigned int iy = 0; iy < 7; ++iy) {
             if (get[iy]) {
-                resultSet[count]->data[iy] = (*workRecord.find(iz)).second->data[iy];
+                resultSet[count]->data[iy] = (workRecord.find(iz)->second)->data[iy];
             }
         }
 outerSelect:
@@ -144,7 +156,7 @@ void Database::Insert(const string &id, const string &into, Record *row) {
         d[into] = table();
     }
     
-    table &workTable = (*d.find(into)).second;
+    table &workTable = d.find(into)->second;
     
     if (workTable.find(id) == workTable.end()) {
         record r; r[0] = row;
@@ -152,7 +164,7 @@ void Database::Insert(const string &id, const string &into, Record *row) {
         d[into] = workTable;
         return;
     }
-    record &rec = (*workTable.find(id)).second;
+    record &rec = workTable.find(id)->second;
     rec[rec.size()] = row;
     workTable[id] = rec;
     d[into] = workTable;
@@ -164,7 +176,7 @@ void Database::Delete(const string &id, const string &from, bool *where, Record 
         throw(DatabaseException("Delete: no table (" + from + ")"));
     }
     
-    table &workTable = (*d.find(from)).second;
+    table &workTable = d.find(from)->second;
     if (workTable.find(id) == workTable.end()) {
         return;
     }
@@ -173,7 +185,7 @@ void Database::Delete(const string &id, const string &from, bool *where, Record 
     
     for (unsigned int ix = 0; ix < workRecord.size(); ++ix) {
         for (unsigned int iy = 0; iy < 7; ++iy) {
-            if (where[iy] && values->data[iy] != (*workRecord.find(ix)).second->data[iy]) {
+            if (where[iy] && values->data[iy] != (workRecord.find(ix)->second)->data[iy]) {
                 goto outerDelete;
             }
         }
@@ -188,16 +200,16 @@ void Database::Update(const string &id, const string &name, bool *set, Record *t
         throw(DatabaseException("Update: no table (" + name + ")"));
     }
     
-    table &workTable = (*d.find(name)).second;
+    table &workTable = d.find(name)->second;
     if (workTable.find(id) == workTable.end()) {
         throw(DatabaseException("Update: no id (" + id + ")"));
     }
     
-    record &workRecord = (*workTable.find(id)).second;
+    record &workRecord = workTable.find(id)->second;
     
     for (unsigned int ix = 0; ix < workRecord.size(); ++ix) {
         for (unsigned int iy = 0; iy < 7; ++iy) {
-            if (where[iy] && values->data[iy] != (*workRecord.find(ix)).second->data[iy]) {
+            if (where[iy] && values->data[iy] != (workRecord.find(ix)->second)->data[iy]) {
                 goto outerUpdate;
             }
         }
