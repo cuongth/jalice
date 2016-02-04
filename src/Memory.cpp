@@ -1,7 +1,7 @@
 /**
  * Memory - Stores predicates about the user
  *
- * @author    Jonathan Roewen
+ * @author    Cuong Thai
  */
 #include "Memory.h"
 

@@ -1,7 +1,7 @@
 /**
  * Database - A class to emulate a database we will use later
  *
- * @author    Jonathan Roewen
+ * @author    Cuong Thai
  */
 #ifndef DATABASE_H
 #define DATABASE_H
@@ -52,6 +52,8 @@ public:
     
     Record(const string &, const string &, const string &, const string &, const string &, const string &, const string &);
     Record();
+    Record(const Record &);
+    Record & operator=(const Record &);
     ~Record();
 };
 

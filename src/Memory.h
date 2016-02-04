@@ -1,7 +1,7 @@
 /**
  * Memory - Facilitates storing predicates and stuff
  *
- * @author    Jonathan Roewen
+ * @author    Cuong Thai
  */
 #ifndef MEMORY_H
 #define MEMORY_H

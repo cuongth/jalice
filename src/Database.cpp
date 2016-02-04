@@ -1,7 +1,7 @@
 /**
  * Database - A cheesy hack!
  *
- * @author    Jonathan Roewen
+ * @author    Cuong Thai
  */
 #include "Database.h"
 
@@ -161,14 +161,10 @@ void Database::Insert(const string &id, const string &into, Record *row) {
     if (workTable.find(id) == workTable.end()) {
         record r; r[0] = row;
         workTable[id] = r;
-        d[into] = workTable;
         return;
     }
     record &rec = workTable.find(id)->second;
     rec[rec.size()] = row;
-    workTable[id] = rec;
-    d[into] = workTable;
-//    save();
 }
 
 void Database::Delete(const string &id, const string &from, bool *where, Record *values) {
@@ -181,7 +177,7 @@ void Database::Delete(const string &id, const string &from, bool *where, Record 
         return;
     }
     
-    record &workRecord = (*workTable.find(id)).second;
+    record &workRecord = workTable.find(id)->second;
     
     for (unsigned int ix = 0; ix < workRecord.size(); ++ix) {
         for (unsigned int iy = 0; iy < 7; ++iy) {
@@ -189,7 +185,7 @@ void Database::Delete(const string &id, const string &from, bool *where, Record 
                 goto outerDelete;
             }
         }
-        workRecord[ix] = NULL;
+        workRecord[ix] = NULL; // FIXME
 outerDelete:
         ;
     }
@@ -236,6 +232,30 @@ Record::Record(const string &f1, const string &f2, const string &f3, const strin
     data[4] = f5;
     data[PROPERTY] = prop;
     data[VALUE] = val;
+}
+
+Record::Record(const Record &st) {
+    data = new string[7];
+    data[0] = st.data[0];
+    data[1] = st.data[1];
+    data[2] = st.data[2];
+    data[3] = st.data[3];
+    data[4] = st.data[4];
+    data[PROPERTY] = st.data[PROPERTY];
+    data[VALUE] = st.data[VALUE];
+}
+
+Record & Record::operator=(const Record &st) {
+    if (this == &st)
+        return *this;
+    data[0] = st.data[0];
+    data[1] = st.data[1];
+    data[2] = st.data[2];
+    data[3] = st.data[3];
+    data[4] = st.data[4];
+    data[PROPERTY] = st.data[PROPERTY];
+    data[VALUE] = st.data[VALUE];
+    return *this;
 }
 
 Record::~Record() {
